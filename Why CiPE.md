@@ -15,7 +15,7 @@ Track Medication Intake: The tool will keep a comprehensive record of a patient'
 Automatically identify and warn patients about potential harmful interactions between drugs they are currently taking.
 
 ## Side-Effect Mitigation Recommendations: 
-In cases where there's a risk of side effects, the tool will offer actionable advice and recommended steps to mitigate these side effects.
+In cases where there's a risk of side effects, the tool will offer actionable advice and recommended steps to mitigate these side effects. It will medicaaly suggest ways to avoid side-effects.
 
 # Technical Requirements:
 
