@@ -4,7 +4,9 @@ import requests
 import os
 import json
 import predictionguard as pg
-import lancedb
+# Import LlamaIndex related libraries
+from llama_index import VectorStoreIndex, SimpleWebPageReader
+
 
 
 app = Flask(__name__)
@@ -139,22 +141,21 @@ def llm_endpoint():
             return jsonify({"error": str(e)}), 500
 
 # Set the path to your LanceDB dataset
-DATABASE_PATH = '<PATH_TO_YOUR_LANCEDB_DATASET>'
+# Set your OpenAI API key
+os.environ["OPENAI_API_KEY"] = OPENAI_API_KEY  # Replace with your actual key
+
+# Load the pre-computed index (do this outside the retrieve_data function)
+index = VectorStoreIndex.load("'backend/llama_index_file'")
 
 def retrieve_data(query):
-    # Connect to the LanceDB dataset
-    db = lancedb.connect(DATABASE_PATH)
+    # Create a query engine from the index
+    query_engine = index.as_query_engine()
 
-    # Access your table - replace 'my_table' with your actual table name
-    table = db['my_table']
+    # Query the data
+    response = query_engine.query(query)
+    return response
 
-    # Perform a query - adjust this based on your table structure and query type
-    results = table.search(query).limit(20).to_list()  # Limit to 20 results
 
-    # Convert the results to a suitable format
-    formatted_results = [dict(row) for row in results]
-
-    return formatted_results
 
 # Set your Prediction Guard token
 os.environ["PREDICTIONGUARD_TOKEN"] = "q1VuOjnffJ3NO2oFN8Q9m8vghYc84ld13jaqdF7E"
