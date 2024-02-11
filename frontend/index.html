@@ -10,7 +10,7 @@
 * Copyright ThemeSelection (https://themeselection.com)
 
 =========================================================
- -->
+-->
 <!-- beautify ignore:start -->
 <html
   lang="en"
@@ -213,8 +213,13 @@
                           </div>
                           <span class="fw-semibold d-block mb-1">Emergency Contacts</span>
                           <!-- card 1 -->
-                          <h3 class="card-title mb-2" id="">$12,628</h3>
-                          <small class="text-success fw-semibold"><i class="bx bx-up-arrow-alt"></i> +72.80%</small>
+                          <ul class="card-title mb-2" style="padding: 20px; list-style-type: none;">
+                            <li>Emergency Services: 911</li>
+                            <li>Non-Emergency Police: 311</li>
+                            <li>Poison Control: 800-222-1222</li>
+                            <li>National Suicide Prevention Lifeline: 800-273-TALK (8255)</li>
+                          </ul>
+                          
                         </div>
                       </div>
                     </div>
@@ -229,7 +234,7 @@
               <div class="col-12 col-lg-8 order-2 order-md-3 order-lg-2 mb-4">
                 <div class="card">
                   <div class="card-body">
-                    <form>
+                    <form id = "questionForm">
                       <!-- Age, Name, Ethnicity, Gender in one row -->
                       <div class="row">
                           <div class="col-md-3 mb-3">
@@ -297,14 +302,9 @@
                           <div class="drug-interaction">
                             <span class="fw-semibold d-block mb-1">Drug Interaction</span>
                             <div id="feedback">
-                              <span id="severeEmoji" style="font-size: 36px; display: none;">❤️</span>
-                              <p id="severeResponse" style="display: none;">It will cause dangerous drug interaction.</p>
-                              
-                              <span id="midEmoji" style="font-size: 36px; display: none;">💛</span>
-                                <p id="midResponse" style="display: none;">Pay attention to the drug interaction.</p>
-                              
-                              <span id="weakEmoji" style="font-size: 36px; display: none;">💚</span>
-                              <p id="weakResponse" style="display: none;">It is an acceptable drug interaction.</p>
+                              <span id="severeEmoji" style="font-size: 25px; display: none;">❤️ Danger in your medication interaction. </span>                              
+                              <span id="midEmoji" style="font-size: 25px; display: none;">💛 Be causious with your medication interaction.</span>                              
+                              <span id="weakEmoji" style="font-size: 25px; display: none;">💚 Your medication interaction is safe.</span>
                             </div>
                           </div>
                         </div>
@@ -338,11 +338,38 @@
               </div>
               <div class="row">
                 <!-- Order Statistics -->
-                <div class="col-md-6 col-lg-4 col-xl-4 order-0 mb-4">
+                <div class="col-md-6 col-lg-4 col-xl-6 order-0 mb-6">
                   <div class="card h-100">
                     <div class="card-header d-flex align-items-center justify-content-between pb-0">
                       <div class="card-title mb-0">
                         <h5 class="m-0 me-2">Expected Benefits</h5>
+                        <small class="text-muted">These are the expected results you will get benefit from.</small>
+                      </div>
+                      <div class="dropdown">
+                        <button
+                          class="btn p-0"
+                          type="button"
+                          id="orederStatistics"
+                          data-bs-toggle="dropdown"
+                          aria-haspopup="true"
+                          aria-expanded="false"
+                        >
+                          <i class="bx bx-dots-vertical-rounded"></i>
+                        </button>
+                        <div class="dropdown-menu dropdown-menu-end" aria-labelledby="orederStatistics">
+                          <a class="dropdown-item" href="javascript:void(0);">Select All</a>
+                          <a class="dropdown-item" href="javascript:void(0);">Refresh</a>
+                          <a class="dropdown-item" href="javascript:void(0);">Share</a>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="card-body">
+                      <div class="d-flex justify-content-between align-items-center mb-3">
+                        <div class="d-flex flex-column align-items-center gap-1">
+                          <h2 class="mb-2">8,258</h2>
+                          <span>Possible Side-Effects</span>
+                        </div>
+                        <div id="orderStatisticsChart"></div>
                         <small class="text-muted">These are the benefits that you can expect.</small>
                       </div>
                       <div id="benefits-box"></div>
@@ -352,10 +379,38 @@
                 <!--/ Order Statistics -->
 
                 <!-- Order Statistics -->
-                <div class="col-md-6 col-lg-4 col-xl-4 order-0 mb-4">
+                <div class="col-md-6 col-lg-4 col-xl-6 order-0 mb-6">
                   <div class="card h-100">
                     <div class="card-header d-flex align-items-center justify-content-between pb-0">
                       <div class="card-title mb-0">
+                        <h5 class="m-0 me-2">Expected Side-Effects</h5>
+                        <small class="text-muted">These are the side-effects that you might be causious.</small>
+                      </div>
+                      <div class="dropdown">
+                        <button
+                          class="btn p-0"
+                          type="button"
+                          id="orederStatistics"
+                          data-bs-toggle="dropdown"
+                          aria-haspopup="true"
+                          aria-expanded="false"
+                        >
+                          <i class="bx bx-dots-vertical-rounded"></i>
+                        </button>
+                        <div class="dropdown-menu dropdown-menu-end" aria-labelledby="orederStatistics">
+                          <a class="dropdown-item" href="javascript:void(0);">Select All</a>
+                          <a class="dropdown-item" href="javascript:void(0);">Refresh</a>
+                          <a class="dropdown-item" href="javascript:void(0);">Share</a>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="card-body">
+                      <div class="d-flex justify-content-between align-items-center mb-3">
+                        <div class="d-flex flex-column align-items-center gap-1">
+                          <h2 class="mb-2">8,258</h2>
+                          <span>Possible Side-Effects</span>
+                        </div>
+                        <div id="orderStatisticsChart"></div>
                         <h5 class="m-0 me-2">Expected Side Effects</h5>
                         <small class="text-muted">These are the side effects that you might see.</small>
                       </div>
@@ -551,7 +606,9 @@
           var additionalInfo = formData.get('additionalInfo')
           var benefit_question = `I am ${userAge} years old, ${userGender}, who has a medical history of getting these following procedures, ${procedures}. I have gotten prescriptions of ${prescriptions}. I want you to tell me the benefits of having the prescriptions based on the procedures that I got.`;
           var sideeffect_question = `I am ${userAge} years old, ${userGender}, who has a medical history of getting these following procedures, ${procedures}. I have gotten prescriptions of ${prescriptions}. I want you to tell me the side effect about the prescriptions based on the ${additionalInfo} that I provided`;
-
+          
+          console.log(`Username: ${userName}, User Age: ${userAge}, User Gender: ${userGender}, User Ethnicity: ${userEthnicity}, Procedures: ${procedures}, Prescriptions: ${prescriptions}, Additional Info: ${additionalinfo}`);
+          
           fetch('/ask', {
               method: 'POST',
               headers: {
@@ -613,7 +670,6 @@
       // Adjust the severity level here based on the AI's response
       displayCorrectEmoji('mid'); // Example: Dynamically set to 'severe', 'mid', or 'weak'
   </script>
-
     <script>
       document.getElementById('questionForm').addEventListener('submit', function (event) {
         event.preventDefault();
