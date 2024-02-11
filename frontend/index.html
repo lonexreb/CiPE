@@ -367,6 +367,7 @@
                         <h5 class="m-0 me-2">Expected Benefits</h5>
                         <small class="text-muted">These are the benefits that you can expect.</small>
                       </div>
+                      <div id="benefits-box"></div>
                     </div>
                   </div>
                 </div>
@@ -561,56 +562,56 @@
 
     <script>
       document.getElementById('questionForm').addEventListener('submit', function (event) {
-          event.preventDefault();
-          var formData = new FormData(this);
-          var userName = formData.get('userName');
-          var userAge = formData.get('userAge');
-          var userGender = formData.get('userGender');
-          var userEthnicity = formData.get('userEthnicity');
-          var procedures = formData.get('procedures');
-          var prescriptions = formData.get('prescriptions');
-          var additionalInfo = formData.get('additionalInfo')
-          var benefit_question = `I am ${userAge} years old, ${userGender}, who has a medical history of getting these following procedures, ${procedures}. I have gotten prescriptions of ${prescriptions}. I want you to tell me the benefits of having the prescriptions based on the procedures that I got.`;
-          var sideeffect_question = `I am ${userAge} years old, ${userGender}, who has a medical history of getting these following procedures, ${procedures}. I have gotten prescriptions of ${prescriptions}. I want you to tell me the side effect about the prescriptions based on the ${additionalInfo} that I provided`;
+        event.preventDefault();
+        var formData = new FormData(this);
+        var userName = formData.get('userName');
+        var userAge = formData.get('userAge');
+        var userGender = formData.get('userGender');
+        var userEthnicity = formData.get('userEthnicity');
+        var procedures = formData.get('procedures');
+        var prescriptions = formData.get('prescriptions');
+        var additionalInfo = formData.get('additionalInfo')
+        var benefit_question = `I am ${userAge} years old, ${userGender}, who has a medical history of getting these following procedures, ${procedures}. I have gotten prescriptions of ${prescriptions}. I want you to tell me the benefits of having the prescriptions based on the procedures that I got.`;
+        var sideeffect_question = `I am ${userAge} years old, ${userGender}, who has a medical history of getting these following procedures, ${procedures}. I have gotten prescriptions of ${prescriptions}. I want you to tell me the side effect about the prescriptions based on the ${additionalInfo} that I provided`;
 
-          fetch('/ask', {
-              method: 'POST',
-              headers: {
-                  'Content-Type': 'application/json'
-              },
-              body: JSON.stringify({ question: benefit_question })
+        fetch('/ask', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ question: benefit_question })
+        })
+          .then(response => response.json())
+          .then(data => {
+            // Extracting content from the response
+            const content = data.message.trim();
+
+            // Update the answer element with the extracted content
+            document.getElementById('answer').innerText = content;
           })
-              .then(response => response.json())
-              .then(data => {
-                  // Extracting content from the response
-                  const content = data.message.trim();
+          .catch(error => {
+            console.error('Error:', error);
+          });
 
-                  // Update the answer element with the extracted content
-                  document.getElementById('answer').innerText = content;
-              })
-              .catch(error => {
-                  console.error('Error:', error);
-              });
-          
-          fetch('/ask', {
-              method: 'POST',
-              headers: {
-                  'Content-Type': 'application/json'
-              },
-              body: JSON.stringify({ question: sideeffect_question })
+        fetch('/ask', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ question: sideeffect_question })
+        })
+          .then(response => response.json())
+          .then(data => {
+            // Extracting content from the response
+            const content = data.message.trim();
+
+            // Update the answer element with the extracted content
+            document.getElementById('benefits-box').innerText = content;
           })
-              .then(response => response.json())
-              .then(data => {
-                  // Extracting content from the response
-                  const content = data.message.trim();
-
-                  // Update the answer element with the extracted content
-                  document.getElementById('answer').innerText = content;
-              })
-              .catch(error => {
-                  console.error('Error:', error);
-              });    
+          .catch(error => {
+            console.error('Error:', error);
+          });
       })
-  </script>
+    </script>
   </body>
 </html>

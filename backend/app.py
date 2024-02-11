@@ -1,13 +1,50 @@
 from flask import Flask, request, jsonify
 from flask_mail import Mail, Message
-import requests  # You might need to install this package if not already installed
 # from db import get_db
+import requests
+import os
+import json
+import predictionguard as pg
+# import lancedb
+from dotenv import load_dotenv
 
 
 app = Flask(__name__)
 
 # Your OpenAI API key
 OPENAI_API_KEY = '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'  # Replace with your actual key
+
+@app.route('/ask', methods=['POST'])
+def ask_gpt():
+    # ask LLM a question and parse result
+    question = request.json.get('question')
+    print(request)
+
+    load_dotenv()
+    
+    messages = [
+    {
+        "role": "system",
+        "content": "You are a helpful assistant. Your model is hosted by Prediction Guard, a leading AI company."
+    },
+    {
+        "role": "user",
+        "content": "Where can I access the LLMs in a safe and secure environment?"
+    }
+    ]
+
+    result = pg.Chat.create(
+    model="Neural-Chat-7B",
+    messages=messages
+    )
+
+    print(result)
+    
+    # print()
+    # response = app.response_class(response=json.dumps(completion.choices[0].message.content),status=200, minetype='application/json')
+    # return jsonify({"message":completion.choices[0].message.content, 'status':200})
+
+
 
 @app.route('/openai/image', methods=['POST'])
 def generate_image():
