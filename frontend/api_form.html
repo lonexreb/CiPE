@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Information Form</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        form {
+            display: grid;
+            gap: 20px;
+        }
+
+        label {
+            font-weight: bold;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+
+        textarea {
+            resize: vertical;
+            height: 100px;
+        }
+
+        button[type="submit"] {
+            background-color: #007bff;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>User Information Form</h1>
+        <form id="questionForm">
+            <label for="userName">Name:</label>
+            <input type="text" id="userName" name="userName" required>
+
+            <label for="userAge">Age:</label>
+            <input type="number" id="userAge" name="userAge" required>
+
+            <label for="userGender">Gender:</label>
+            <select id="userGender" name="userGender" required>
+                <option value="" disabled selected>Select your gender</option>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+                <option value="other">Other</option>
+            </select>
+
+            <label for="userEthnicity">Ethnicity:</label>
+            <select id="userEthnicity" name="userEthnicity" required>
+                <option value="" disabled selected>Select your ethnicity</option>
+                <option value="asian">Asian</option>
+                <option value="black">Black or African American</option>
+                <option value="hispanic">Hispanic or Latino</option>
+                <option value="white">White</option>
+                <option value="native">Native American or American Indian</option>
+                <option value="middle-eastern">Middle Eastern</option>
+                <option value="pacific">Native Hawaiian or Other Pacific Islander</option>
+                <option value="other">Other</option>
+            </select>
+
+            <label for="procedures">Symptoms:</label>
+            <input type="text" id="procedures" name="procedures" required>
+
+            <label for="prescriptions">Prescriptions:</label>
+            <input type="text" id="prescriptions" name="prescriptions" required>
+
+            <label for="additionalInfo">Additional Info:</label>
+            <textarea id="additionalInfo" name="additionalInfo" rows="4" cols="50"></textarea>
+
+            <button type="submit">Submit</button>
+
+            <label> Side-Effects </label>
+            <div id="res1"> </div>
+
+            <label> Benefits </label>
+            <div id="res2"> </div>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('questionForm').addEventListener('submit', function (event) {
+            event.preventDefault();
+
+            // Get form values
+            var userName = document.getElementById('userName').value;
+            var userAge = document.getElementById('userAge').value;
+            var userGender = document.getElementById('userGender').value;
+            var userEthnicity = document.getElementById('userEthnicity').value;
+            var procedures = document.getElementById('procedures').value;
+            var prescriptions = document.getElementById('prescriptions').value;
+            var additionalInfo = document.getElementById('additionalInfo').value;
+
+            var benefit_question = `I want you to tell me the benefits of my prescribed drugs. Tell me in crisp bullet points only`;
+
+            var sideeffect_question = `I am ${userAge} years old, ${userGender}, who has a medical history of getting these following procedures, ${procedures}. I have gotten prescriptions of ${prescriptions}. I want you to tell me the side effect about the prescriptions based on the ${additionalInfo} that I provided. Tell me in crisp bullet points only`;
+
+            // Print form values to console
+            console.log('Name:', userName);
+            console.log('Age:', userAge);
+            console.log('Gender:', userGender);
+            console.log('Ethnicity:', userEthnicity);
+            console.log('Procedures:', procedures);
+            console.log('Prescriptions:', prescriptions);
+            console.log('Additional Info:', additionalInfo);
+
+            fetch('http://127.0.0.1:5000/ask', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ question: sideeffect_question })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    // Extracting content from the response
+                    const content = data.choices[0].message.content.trim();
+                    console.log(content)
+                    // Update the answer element with the extracted content
+                    document.getElementById('res1').innerText = content;
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+
+            fetch('http://127.0.0.1:5000/ask', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ question: benefit_question })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    // Extracting content from the response
+                    const content = data.choices[0].message.content.trim();
+                    console.log(content)
+                    // Update the answer element with the extracted content
+                    document.getElementById('res2').innerText = content;
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        });
+    </script>
+</body>
+
+</html>
