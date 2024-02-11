@@ -17,7 +17,7 @@ import json
 import predictionguard as pg
 
 # Set your Prediction Guard token as an environmental variable.
-os.environ["PREDICTIONGUARD_TOKEN"] = "q1VuOjnffJ3NO2oFN8Q9m8vghYc84ld13jaqdF7E"
+os.environ["PREDICTIONGUARD_TOKEN"] = "*"
 
 # Define our prompt.
 messages = [
