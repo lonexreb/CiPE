@@ -10,7 +10,6 @@ from dotenv import load_dotenv
 from flask_cors import CORS
 from app import create_app
 
-
 app = create_app()
 CORS(app, origins='*')
 # print(app.url_map.default_port)

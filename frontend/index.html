@@ -240,7 +240,7 @@
               <div class="col-12 col-lg-8 order-2 order-md-3 order-lg-2 mb-4">
                 <div class="card">
                   <div class="card-body">
-                    <form>
+                    <form id="questionForm">
                       <!-- Age, Name, Ethnicity, Gender in one row -->
                       <div class="row">
                           <div class="col-md-3 mb-3">
@@ -253,7 +253,7 @@
                         </div>
                         <div class="col-md-3 mb-3">
                           <label for="userEthnicity" class="form-label">Ethnicity:</label>
-                          <select class="form-select" id="userEthnicity">
+                          <select class="form-select"  id="userEthnicity">
                               <option selected>Choose...</option>
                               <option value="asian">Asian</option>
                               <option value="black">Black or African American</option>
@@ -564,36 +564,39 @@
       document.getElementById('questionForm').addEventListener('submit', function (event) {
         event.preventDefault();
         var formData = new FormData(this);
-        var userName = formData.get('userName');
-        var userAge = formData.get('userAge');
-        var userGender = formData.get('userGender');
-        var userEthnicity = formData.get('userEthnicity');
+        var username = formData.get('userName');
+        var userage = formData.get('userAge');
+        var usergender = formData.get('userGender');
+        var userethnicity = formData.get('userEthnicity');
         var procedures = formData.get('procedures');
         var prescriptions = formData.get('prescriptions');
-        var additionalInfo = formData.get('additionalInfo')
+        var additionalinfo = formData.get('additionalInfo');
+
+        console.log(`Username: ${username}, User Age: ${userage}, User Gender: ${usergender}, User Ethnicity: ${userethnicity}, Procedures: ${procedures}, Prescriptions: ${prescriptions}, Additional Info: ${additionalinfo}`);
+
         var benefit_question = `I am ${userAge} years old, ${userGender}, who has a medical history of getting these following procedures, ${procedures}. I have gotten prescriptions of ${prescriptions}. I want you to tell me the benefits of having the prescriptions based on the procedures that I got.`;
         var sideeffect_question = `I am ${userAge} years old, ${userGender}, who has a medical history of getting these following procedures, ${procedures}. I have gotten prescriptions of ${prescriptions}. I want you to tell me the side effect about the prescriptions based on the ${additionalInfo} that I provided`;
 
-        fetch('/ask', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({ question: benefit_question })
-        })
-          .then(response => response.json())
-          .then(data => {
-            // Extracting content from the response
-            const content = data.message.trim();
+        // fetch('http://127.0.0.1:5000/ask', {
+        //   method: 'POST',
+        //   headers: {
+        //     'Content-Type': 'application/json'
+        //   },
+        //   body: JSON.stringify({ question: benefit_question })
+        // })
+        //   .then(response => response.json())
+        //   .then(data => {
+        //     // Extracting content from the response
+        //     const content = data.message.trim();
 
-            // Update the answer element with the extracted content
-            document.getElementById('answer').innerText = content;
-          })
-          .catch(error => {
-            console.error('Error:', error);
-          });
+        //     // Update the answer element with the extracted content
+        //     document.getElementById('answer').innerText = content;
+        //   })
+        //   .catch(error => {
+        //     console.error('Error:', error);
+        //   });
 
-        fetch('/ask', {
+        fetch('http://127.0.0.1:5000/ask', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
@@ -603,7 +606,7 @@
           .then(response => response.json())
           .then(data => {
             // Extracting content from the response
-            const content = data.message.trim();
+            const content = data.choices[0].message.content.trim();
 
             // Update the answer element with the extracted content
             document.getElementById('benefits-box').innerText = content;
