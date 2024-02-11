@@ -4,6 +4,8 @@ import requests
 import os
 import json
 import predictionguard as pg
+import lancedb
+
 
 app = Flask(__name__)
 
@@ -73,40 +75,118 @@ mail = Mail(app)
 # Set your Prediction Guard token
 os.environ["PREDICTIONGUARD_TOKEN"] = "q1VuOjnffJ3NO2oFN8Q9m8vghYc84ld13jaqdF7E"
 
-@app.route('/api/llm', methods=['GET', 'POST'])
+# @app.route('/api/llm', methods=['GET', 'POST'])
+# def llm_endpoint():
+#     if request.method == 'POST':
+#         user_data = request.json
+
+#         # Define the prompt with the user data
+#         messages = [
+#             {
+#                 "role": "system",
+#                 "content": "You are a helpful assistant. Your model is hosted by Prediction Guard, a leading AI company."
+#             },
+#             {
+#                 "role": "user",
+#                 "content": user_data.get("content")
+#             }
+#         ]
+
+#         # Call the Prediction Guard API with the messages
+#         try:
+#             result = pg.Chat.create(
+#                 model="Neural-Chat-7B",
+#                 messages=messages
+#             )
+
+#             # Return the Prediction Guard API's response to the frontend
+#             return jsonify(result), 200
+
+#         except Exception as e:
+#             # Handle errors (e.g., API not reachable, bad request, etc.)
+#             return jsonify({"error": str(e)}), 500
+
+#     else:
+#         # For GET requests, you can return a simple message or data
+#         return jsonify({"message": "Send a POST request with user data"}), 200
+
+
+@app.route('/api/llm', methods=['POST'])
 def llm_endpoint():
     if request.method == 'POST':
         user_data = request.json
+        user_query = user_data.get("content")
+        
+        print("user_query: " + str(user_query))
 
-        # Define the prompt with the user data
-        messages = [
-            {
-                "role": "system",
-                "content": "You are a helpful assistant. Your model is hosted by Prediction Guard, a leading AI company."
-            },
-            {
-                "role": "user",
-                "content": user_data.get("content")
-            }
-        ]
+        # Retrieve relevant information from your dataset
+        retrieved_data = retrieve_data(user_query)  # Implement this function
 
-        # Call the Prediction Guard API with the messages
+        print("retrieved_data: " + str(retrieved_data))
+
+
+        # Augment the user query with retrieved data
+        augmented_query = f"{user_query} {retrieved_data}"
+
+        print("augmented_query: " + str(augmented_query))
+
+
+        # Now call the LLM with the augmented query
         try:
-            result = pg.Chat.create(
-                model="Neural-Chat-7B",
-                messages=messages
-            )
-
-            # Return the Prediction Guard API's response to the frontend
-            return jsonify(result), 200
-
+            llm_response = call_llm(augmented_query)  # Implement this function
+            return jsonify(llm_response), 200
         except Exception as e:
-            # Handle errors (e.g., API not reachable, bad request, etc.)
             return jsonify({"error": str(e)}), 500
 
-    else:
-        # For GET requests, you can return a simple message or data
-        return jsonify({"message": "Send a POST request with user data"}), 200
+# Set the path to your LanceDB dataset
+DATABASE_PATH = '<PATH_TO_YOUR_LANCEDB_DATASET>'
+
+def retrieve_data(query):
+    # Connect to the LanceDB dataset
+    db = lancedb.connect(DATABASE_PATH)
+
+    # Access your table - replace 'my_table' with your actual table name
+    table = db['my_table']
+
+    # Perform a query - adjust this based on your table structure and query type
+    results = table.search(query).limit(20).to_list()  # Limit to 20 results
+
+    # Convert the results to a suitable format
+    formatted_results = [dict(row) for row in results]
+
+    return formatted_results
+
+# Set your Prediction Guard token
+os.environ["PREDICTIONGUARD_TOKEN"] = "q1VuOjnffJ3NO2oFN8Q9m8vghYc84ld13jaqdF7E"
+
+def call_llm(augmented_query):
+    # Define the prompt with the augmented data
+    messages = [
+        {
+            "role": "system",
+            "content": "You are a helpful assistant. Your model is hosted by Prediction Guard, a leading AI company."
+        },
+        {
+            "role": "user",
+            "content": augmented_query
+        }
+    ]
+
+    # Call the Prediction Guard API with the messages
+    try:
+        result = pg.Chat.create(
+            model="Neural-Chat-7B",
+            messages=messages
+        )
+
+        # Return the Prediction Guard API's response
+        return result
+
+    except Exception as e:
+        # Handle errors and return a suitable response
+        return {'error': str(e)}
+
+
 @app.route('/send-email', methods=['POST'])
 def send_email():
     data = request.json
